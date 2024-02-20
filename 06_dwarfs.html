@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Clumpy / Blue / Dwarfs | Ultrawide Gallery</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/htl@0.3.1/+esm">
+<script type="module">
+
+import {define} from "./_observablehq/client.js";
+
+define({id: "0b1252f9", inputs: ["FileAttachment","html"], outputs: ["Inputs","objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
+const Inputs = await import("./_observablehq/stdlib/inputs.js");
+
+// Load objects data from the JSON file
+const objects = await FileAttachment("objects.json").json();
+
+// Load images from the zip file
+const muybridge = await FileAttachment("data/Archive.zip").zip();
+
+// Get filenames from the zip file
+const filenames = (await muybridge.filenames)
+  .filter(filename => !filename.includes("__MACOSX/"));
+
+// Initialize imagesData as an empty object
+const imagesData = {};
+
+const allTags = Array.from(new Set(objects.flatMap(obj => obj.tags)));
+
+// Listen for changes in the dropdown selection
+
+// Iterate over each filename and load the corresponding image from the zip file
+for (const filename of filenames) {
+  // Split the filename to extract the ID
+  const id = filename.split(".")[0];
+  // Find the corresponding object in objects based on ID
+  const object = objects.find(obj => obj.id === id);
+  
+  if (object) {
+    const file = muybridge.file(filename);
+    const image = await file.image();
+    // Assign tags to the image object if found in objects, otherwise, assign an empty array
+    const tags = object.tags || [];
+    // Add the image object with its associated tags to imagesData
+    imagesData[filename] = {
+      image: image,
+      tags: tags,
+      link:object.url
+    };
+  }
+}
+
+
+const filteredFilenames = Object.keys(imagesData)
+    .filter(filename => imagesData[filename].tags.includes("DWARF"));
+
+
+
+function Gallery(imagesData) {
+  if (!Array.isArray(imagesData)) {
+    return html`<div>No images to display</div>`;
+  }
+
+  return html`
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 1rem;
+    ">
+      ${Object.values(imagesData).map((image) => {
+        // Apply style to each image object
+        image.image.style = 'width: 100%; height: 100%;';
+        // Render the image inside <a> tag with specified link and target
+        return html`
+          <a href="${image.link}" target="_blank" style="width: 100%; height: 100%;">
+            ${image.image}
+          </a>
+        `;
+      })}
+    </div>
+  `;
+}
+
+// Extract images from filtered filenames
+const filteredImages = await Promise.all(filteredFilenames.map(async (filename) => {
+  return imagesData[filename];
+}));
+
+
+// Create the gallery with filtered images
+const gallery = Gallery(filteredImages);
+return {Inputs,objects,muybridge,filenames,imagesData,allTags,filteredFilenames,Gallery,filteredImages,gallery};
+}});
+
+define({id: "ce387d5e", inline: true, inputs: ["gallery","display"], body: async (gallery,display) => {
+display(await(
+gallery
+))
+}});
+
+</script>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Ultrawide Gallery</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./02_UDG-Priority">Priority UDG Candidates</a></li>
+    <li class="observablehq-link"><a href="./03_UDG-POSSIBLE">Possible UDGs</a></li>
+    <li class="observablehq-link"><a href="./04_mergers">Merger Candidates</a></li>
+    <li class="observablehq-link"><a href="./05_halo_outskirts">Halo Outskirts Systems</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./06_dwarfs">Clumpy / Blue / Dwarfs</a></li>
+    <li class="observablehq-link"><a href="./07_spiral">Spirals of Interest</a></li>
+    <li class="observablehq-link"><a href="./08_rings">Ring Systems</a></li>
+    <li class="observablehq-link"><a href="./09_Cirrus">Cirrus</a></li>
+    <li class="observablehq-link"><a href="./10_weird">Weird Stuff</a></li>
+    <li class="observablehq-link"><a href="./11_other">Other</a></li>
+  </ol>
+</nav>
+<script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<h1 id="clumpy-blue-systems" tabindex="-1"><a class="observablehq-header-anchor" href="#clumpy-blue-systems">Clumpy Blue Systems</a></h1>
+<div id="cell-0b1252f9" class="observablehq observablehq--block"></div>
+<div class="card">
+<span id="cell-ce387d5e" class="observablehq--loading"></span>
+</div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./05_halo_outskirts"><span>Halo Outskirts Systems</span></a><a rel="next" href="./07_spiral"><span>Spirals of Interest</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-20T17:54:17">Feb 20, 2024</a>.</div>
+</footer>
+</div>
