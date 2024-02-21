@@ -1,2 +1,0 @@
-# ultrawide-dashboard
-ultrawide dashboard

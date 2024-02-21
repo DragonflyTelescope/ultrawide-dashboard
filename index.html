@@ -3,13 +3,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>UW Dashboard | Ultrawide Gallery</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="./observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="modulepreload" href="./observablehq/client.js">
-<link rel="modulepreload" href="./observablehq/runtime.js">
-<link rel="modulepreload" href="./observablehq/stdlib.js">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6.13/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/binary-search-bounds@2.0.5/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-array@3.2.4/+esm">
@@ -52,7 +52,7 @@
 <link rel="modulepreload" href="https://cdn.skypack.dev/d3-geo-projection@4">
 <script type="module">
 
-import {define} from "./observablehq/client.js";
+import {define} from "./_observablehq/client.js";
 
 define({id: "030ab787", outputs: ["currentTimeUTC"], body: () => {
 const currentTimeUTC = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -65,7 +65,7 @@ currentTimeUTC
 ))
 }});
 
-define({id: "ec8107ac", inputs: ["d3","FileAttachment"], outputs: ["events","parseTime","tagsToCount","tagCounts","updateTagCounts"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./file/objects.json"}], body: (d3,FileAttachment) => {
+define({id: "ec8107ac", inputs: ["d3","FileAttachment"], outputs: ["events","parseTime","tagsToCount","tagCounts","updateTagCounts"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"}], body: (d3,FileAttachment) => {
 let events;
 const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
 const tagsToCount = ["LSB-LARGE", "LSB-SMALL", "HALO-FEATURES", "MERGER"];
@@ -123,7 +123,7 @@ display(await(
 ))
 }});
 
-define({id: "8faf347b", inputs: ["html","FileAttachment","parseTime"], outputs: ["Gallery","objects","muybridge","filenames","imagesData","imagesArray","mostRecentImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./file/data/Archive.zip"}], body: async (html,FileAttachment,parseTime) => {
+define({id: "8faf347b", inputs: ["html","FileAttachment","parseTime"], outputs: ["Gallery","objects","muybridge","filenames","imagesData","imagesArray","mostRecentImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (html,FileAttachment,parseTime) => {
 function Gallery(imagesData) {
   if (!Array.isArray(imagesData)) {
     return html`<div>No images to display</div>`;
@@ -181,7 +181,7 @@ gallery
 ))
 }});
 
-define({id: "b1005cd8", inputs: ["d3","events","FileAttachment"], outputs: ["geoMollweide","positiveLongitudes","negativeLongitudes","udgEvents","regularEvents","mw","groupedData","personCounts","events2"], files: [{"name":"./mw.json","mimeType":"application/json","path":"./file/mw.json"}], body: async (d3,events,FileAttachment) => {
+define({id: "b1005cd8", inputs: ["d3","events","FileAttachment"], outputs: ["geoMollweide","positiveLongitudes","negativeLongitudes","udgEvents","regularEvents","mw","groupedData","personCounts","events2"], files: [{"name":"./mw.json","mimeType":"application/json","path":"./_file/mw.json"}], body: async (d3,events,FileAttachment) => {
 const {geoMollweide} = await import("https://cdn.skypack.dev/d3-geo-projection@4");
 const positiveLongitudes = d3.range(180, 19, -20); // From +180 to +20, decreasing leftward
 const negativeLongitudes = d3.range(0, -181, -20).map(value => 360 + value); 
@@ -318,6 +318,17 @@ display(await(
   color: var(--theme-foreground-muted);
 }
 
+.hero h5 {
+  margin: 0;
+  max-width: 34em;
+  font-size: 13px;
+  font-style: initial;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--theme-foreground-muted);
+  margin-top:15px;
+}
+
 @media (min-width: 640px) {
   .hero h1 {
     font-size: 90px;
@@ -329,7 +340,7 @@ display(await(
 <div class="hero">
   <h1>Ultrawide Dashboard</h1>
   <h2>Objects found / categorized in <code>Tileviewer</code> from the Dragonfly Ultrawide Survey</h2>
-  <h3>Last updated:<span id="cell-160e1b8e" class="observablehq--loading"></span> </h3>
+  <h5>Last updated: <span id="cell-160e1b8e" class="observablehq--loading"></span> UTC</h5>
 </div>
 <div id="cell-ec8107ac" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-4">
@@ -367,7 +378,6 @@ display(await(
 <span id="cell-637f320d" class="observablehq--loading"></span>
 </div></main>
 <footer id="observablehq-footer">
-<nav><a rel="next" href="./02_UDG-Priority"><span>Priority UDG Candidates</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-20T17:54:17">Feb 20, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-20T19:55:11">Feb 20, 2024</a>.</div>
 </footer>
 </div>
