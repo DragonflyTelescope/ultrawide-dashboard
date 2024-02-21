@@ -3,23 +3,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Priority UDG Candidates | Ultrawide Gallery</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="preload" as="style" href="./observablehq/theme-air,near-midnight,alt,wide.css">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
-<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="preload" as="style" href="./observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="./observablehq/theme-air,near-midnight,alt,wide.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
-<link rel="modulepreload" href="./_observablehq/client.js">
-<link rel="modulepreload" href="./_observablehq/runtime.js">
-<link rel="modulepreload" href="./_observablehq/stdlib.js">
-<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
+<link rel="stylesheet" type="text/css" href="./observablehq/stdlib/inputs.css">
+<link rel="modulepreload" href="./observablehq/client.js">
+<link rel="modulepreload" href="./observablehq/runtime.js">
+<link rel="modulepreload" href="./observablehq/stdlib.js">
+<link rel="modulepreload" href="./observablehq/stdlib/inputs.js">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/htl@0.3.1/+esm">
 <script type="module">
 
-import {define} from "./_observablehq/client.js";
+import {define} from "./observablehq/client.js";
 
-define({id: "985bfda6", inputs: ["FileAttachment","html"], outputs: ["Inputs","objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
-const Inputs = await import("./_observablehq/stdlib/inputs.js");
+define({id: "985bfda6", inputs: ["FileAttachment","html"], outputs: ["Inputs","objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./file/data/Archive.zip"}], body: async (FileAttachment,html) => {
+const Inputs = await import("./observablehq/stdlib/inputs.js");
 
 // Load objects data from the JSON file
 const objects = await FileAttachment("objects.json").json();
@@ -132,20 +132,6 @@ gallery
 <main id="observablehq-main" class="observablehq">
 <h1 id="priority-udg-candidates" tabindex="-1"><a class="observablehq-header-anchor" href="#priority-udg-candidates">Priority UDG Candidates</a></h1>
 <script>
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
-}
-.grid-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.grid-item {
-  width: 100%;
-  height: 100%;
-}
 </script>
 <div id="cell-985bfda6" class="observablehq observablehq--block"></div>
 <div class="card">
