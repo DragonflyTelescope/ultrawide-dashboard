@@ -5,22 +5,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
 <link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
-<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/htl@0.3.1/+esm">
 <script type="module">
 
 import {define} from "./_observablehq/client.js";
 
-define({id: "985bfda6", inputs: ["FileAttachment","html"], outputs: ["Inputs","objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
-const Inputs = await import("./_observablehq/stdlib/inputs.js");
-
+define({id: "23f73d83", inputs: ["FileAttachment","display","html"], outputs: ["objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,display,html) => {
 // Load objects data from the JSON file
 const objects = await FileAttachment("objects.json").json();
 
@@ -62,7 +57,7 @@ for (const filename of filenames) {
 
 const filteredFilenames = Object.keys(imagesData)
     .filter(filename => imagesData[filename].tags.includes("LSB-LARGE"));
-
+display(filteredFilenames);
 function Gallery(imagesData) {
   if (!Array.isArray(imagesData)) {
     return html`<div>No images to display</div>`;
@@ -97,7 +92,7 @@ const filteredImages = await Promise.all(filteredFilenames.map(async (filename) 
 
 // Create the gallery with filtered images
 const gallery = Gallery(filteredImages);
-return {Inputs,objects,muybridge,filenames,imagesData,allTags,filteredFilenames,Gallery,filteredImages,gallery};
+return {objects,muybridge,filenames,imagesData,allTags,filteredFilenames,Gallery,filteredImages,gallery};
 }});
 
 define({id: "ce387d5e", inline: true, inputs: ["gallery","display"], body: async (gallery,display) => {
@@ -147,12 +142,12 @@ gallery
   height: 100%;
 }
 </script>
-<div id="cell-985bfda6" class="observablehq observablehq--block"></div>
+<div id="cell-23f73d83" class="observablehq observablehq--block"></div>
 <div class="card">
 <span id="cell-ce387d5e" class="observablehq--loading"></span>
 </div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-20T20:40:01">Feb 20, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-20T21:52:58">Feb 20, 2024</a>.</div>
 </footer>
 </div>
