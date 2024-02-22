@@ -332,7 +332,7 @@ display(await(
 <div class="hero">
   <h1>Ultrawide Dashboard</h1>
   <h2>Objects found / categorized in <code>Tileviewer</code> from the Dragonfly Ultrawide Survey</h2>
-  <h5>Last updated: 2024-02-22 19:57:40 UTC</h5>
+  <h5>Last updated: 2024-02-22 21:05:13 UTC</h5>
 </div>
 <div id="cell-e1278d56" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-4">
@@ -369,8 +369,14 @@ display(await(
 <h2>Objects Added</h2>
 <span id="cell-91b4a9ca" class="observablehq--loading"></span>
 </div>
+<p>mrf_text = PreText(text=f"MRF Available: {curdoc().tile.mrf_availability}")</p>
+<p>def remove_highlight_callback():
+rect_source.data= dict(x=[],y=[],width=[],height=[],fill_alpha=[])
+remove_highlight_button = Button(label='Remove Highlight Box')
+remove_highlight_button.on_click(remove_highlight_callback)</p>
+<p>mrf_text.text = f"MRF Available: {curdoc().tile.mrf_availability}"</p>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-22T14:57:30">Feb 22, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-22T16:05:05">Feb 22, 2024</a>.</div>
 </footer>
 </div>
