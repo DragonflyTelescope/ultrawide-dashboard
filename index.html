@@ -54,18 +54,7 @@
 
 import {define} from "./_observablehq/client.js";
 
-define({id: "030ab787", outputs: ["currentTimeUTC"], body: () => {
-const currentTimeUTC = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-return {currentTimeUTC};
-}});
-
-define({id: "160e1b8e", inline: true, inputs: ["currentTimeUTC","display"], body: async (currentTimeUTC,display) => {
-display(await(
-currentTimeUTC
-))
-}});
-
-define({id: "ec8107ac", inputs: ["d3","FileAttachment"], outputs: ["events","parseTime","tagsToCount","tagCounts","updateTagCounts"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"}], body: (d3,FileAttachment) => {
+define({id: "e1278d56", inputs: ["d3","FileAttachment"], outputs: ["events","parseTime","tagsToCount","tagCounts","updateTagCounts"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"}], body: (d3,FileAttachment) => {
 let events;
 const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
 const tagsToCount = ["LSB-LARGE", "LSB-SMALL", "HALO-FEATURES", "MERGER"];
@@ -75,7 +64,9 @@ events = FileAttachment("objects.json")
   .json()
   .then((data) => {
     data.forEach((d) => {
-      d.udgcand = (d.tags && (d.tags.includes("LSB-LARGE") || d.tags.includes("LSB-SMALL"))) ? 1 : 0;
+      d.udg = (d.tags && (d.tags.includes("LSB-LARGE"))) ? 1 : 0;
+      d.udgcand = (d.tags && (d.tags.includes("LSB-SMALL"))) ? 1 : 0;
+      d.udgall = (d.tags && (d.tags.includes("LSB-SMALL") || (d.tags.includes("LSB-LARGE") ))) ? 1 : 0;
       tagsToCount.forEach(tag => {
         if (d.tags && d.tags.includes(tag)) {
           tagCounts[tag]++;
@@ -181,12 +172,13 @@ gallery
 ))
 }});
 
-define({id: "b1005cd8", inputs: ["d3","events","FileAttachment"], outputs: ["geoMollweide","positiveLongitudes","negativeLongitudes","udgEvents","regularEvents","mw","groupedData","personCounts","events2"], files: [{"name":"./mw.json","mimeType":"application/json","path":"./_file/mw.json"}], body: async (d3,events,FileAttachment) => {
+define({id: "bcd6714a", inputs: ["d3","events","FileAttachment"], outputs: ["geoMollweide","positiveLongitudes","negativeLongitudes","udgEvents","udgEvents2","regularEvents","mw","groupedData","personCounts","events2"], files: [{"name":"./mw.json","mimeType":"application/json","path":"./_file/mw.json"}], body: async (d3,events,FileAttachment) => {
 const {geoMollweide} = await import("https://cdn.skypack.dev/d3-geo-projection@4");
 const positiveLongitudes = d3.range(180, 19, -20); // From +180 to +20, decreasing leftward
 const negativeLongitudes = d3.range(0, -181, -20).map(value => 360 + value); 
-const udgEvents = events.filter(event => event.udgcand === 1);
-const regularEvents = events.filter(event => event.udgcand !== 1);
+const udgEvents = events.filter(event => event.udg === 1);
+const udgEvents2 = events.filter(event => event.udgcand === 1);
+const regularEvents = events.filter(event => event.udgall !== 1);
 let mw;
 mw =  FileAttachment("mw.json").json();
 
@@ -200,10 +192,10 @@ personCounts.sort((a, b) => b.count - a.count);
 
 // Prepare data for plotting
 const events2 = personCounts.map(d => ({person: d.person, number: d.count}));
-return {geoMollweide,positiveLongitudes,negativeLongitudes,udgEvents,regularEvents,mw,groupedData,personCounts,events2};
+return {geoMollweide,positiveLongitudes,negativeLongitudes,udgEvents,udgEvents2,regularEvents,mw,groupedData,personCounts,events2};
 }});
 
-define({id: "e59bc8ad", inline: true, inputs: ["Plot","geoMollweide","regularEvents","udgEvents","mw","d3","display"], body: async (Plot,geoMollweide,regularEvents,udgEvents,mw,d3,display) => {
+define({id: "2c9d7d21", inline: true, inputs: ["Plot","geoMollweide","regularEvents","udgEvents2","udgEvents","mw","d3","display"], body: async (Plot,geoMollweide,regularEvents,udgEvents2,udgEvents,mw,d3,display) => {
 display(await(
 Plot.plot({
   width:1600,
@@ -213,8 +205,9 @@ projection: {
  marks: [
     Plot.graticule(),
     Plot.sphere(),
-    Plot.dot(regularEvents, { x: 'ra', y: 'dec', r: 10, stroke: "gray" ,tip:true}), // Plot regular events with blue border color
-    Plot.dot(udgEvents, { x: 'ra', y: 'dec', r: 10, stroke: "red", symbol: "square" ,tip:true}), 
+    Plot.dot(regularEvents, { x: 'ra', y: 'dec', r: 5, stroke: "gray" ,tip:true}), // Plot regular events with blue border color
+    Plot.dot(udgEvents2, { x: 'ra', y: 'dec', r: 7, stroke: "orange", symbol: "triangle" ,tip:true}), 
+    Plot.dot(udgEvents, { x: 'ra', y: 'dec', r: 10, stroke: "yellow", symbol: "square" ,tip:true}), 
     Plot.dot(await mw, { x: 'ra', y: 'dec', r: 1, stroke: "steelblue", symbol: "square"}), 
     Plot.text(d3.range(-80, 90, 20), {
        style: { fontSize: '40px' },
@@ -244,7 +237,7 @@ projection: {
 ))
 }});
 
-define({id: "637f320d", inline: true, inputs: ["resize","Plot","events2","display"], body: async (resize,Plot,events2,display) => {
+define({id: "91b4a9ca", inline: true, inputs: ["resize","Plot","events2","display"], body: async (resize,Plot,events2,display) => {
 display(await(
   resize((width) => Plot.plot({
   x: {
@@ -253,7 +246,7 @@ display(await(
   },
   marks: [
     Plot.ruleX([0]),
-    Plot.barX(events2, {x: "number", y: "person", sort: {y: "x", reverse: true}})
+    Plot.barX(events2, {x: "number", y: "person", sort: {y: "x", reverse: true},tip:true})
   ],
   marginLeft: 100, // Increase or decrease as needed
 }))
@@ -336,13 +329,12 @@ display(await(
 }
 
 </style>
-<div id="cell-030ab787" class="observablehq observablehq--block"></div>
 <div class="hero">
   <h1>Ultrawide Dashboard</h1>
   <h2>Objects found / categorized in <code>Tileviewer</code> from the Dragonfly Ultrawide Survey</h2>
-  <h5>Last updated: <span id="cell-160e1b8e" class="observablehq--loading"></span> UTC</h5>
+  <h5>Last updated:  UTC</h5>
 </div>
-<div id="cell-ec8107ac" class="observablehq observablehq--block"></div>
+<div id="cell-e1278d56" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-4">
   <div class="card">
     <h2>Priority UDG Candidates</h2>
@@ -367,17 +359,18 @@ display(await(
 <h1>Latest UW Objects</h1>
 <span id="cell-ce387d5e" class="observablehq--loading"></span>
 </div>
-<div id="cell-b1005cd8" class="observablehq observablehq--block"></div>
+<div id="cell-bcd6714a" class="observablehq observablehq--block"></div>
 <div class="card">
 <h1>On Sky Locations</h1>
-<span id="cell-e59bc8ad" class="observablehq--loading"></span>
+<span id="cell-2c9d7d21" class="observablehq--loading"></span>
 </div>
 <div class="card">
 <h1>Leaderboard</h1>
 <h2>Objects Added</h2>
-<span id="cell-637f320d" class="observablehq--loading"></span>
-</div></main>
+<span id="cell-91b4a9ca" class="observablehq--loading"></span>;
+</div>
+</main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-21T20:03:25">Feb 21, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-21T22:54:37">Feb 21, 2024</a>.</div>
 </footer>
 </div>
