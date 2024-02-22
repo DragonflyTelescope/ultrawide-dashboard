@@ -195,7 +195,7 @@ const events2 = personCounts.map(d => ({person: d.person, number: d.count}));
 return {geoMollweide,positiveLongitudes,negativeLongitudes,udgEvents,udgEvents2,regularEvents,mw,groupedData,personCounts,events2};
 }});
 
-define({id: "2c9d7d21", inline: true, inputs: ["Plot","geoMollweide","regularEvents","udgEvents2","udgEvents","mw","d3","display"], body: async (Plot,geoMollweide,regularEvents,udgEvents2,udgEvents,mw,d3,display) => {
+define({id: "e8a98eae", inline: true, inputs: ["Plot","geoMollweide","regularEvents","udgEvents2","udgEvents","mw","d3","display"], body: async (Plot,geoMollweide,regularEvents,udgEvents2,udgEvents,mw,d3,display) => {
 display(await(
 Plot.plot({
   width:1600,
@@ -207,7 +207,7 @@ projection: {
     Plot.sphere(),
     Plot.dot(regularEvents, { x: 'ra', y: 'dec', r: 5, stroke: "gray" ,tip:true}), // Plot regular events with blue border color
     Plot.dot(udgEvents2, { x: 'ra', y: 'dec', r: 7, stroke: "orange", symbol: "triangle" ,tip:true}), 
-    Plot.dot(udgEvents, { x: 'ra', y: 'dec', r: 10, stroke: "yellow", symbol: "square" ,tip:true}), 
+    Plot.dot(udgEvents, { x: 'ra', y: 'dec', r: 10, stroke: "red", symbol: "square" ,tip:true}), 
     Plot.dot(await mw, { x: 'ra', y: 'dec', r: 1, stroke: "steelblue", symbol: "square"}), 
     Plot.text(d3.range(-80, 90, 20), {
        style: { fontSize: '40px' },
@@ -332,7 +332,7 @@ display(await(
 <div class="hero">
   <h1>Ultrawide Dashboard</h1>
   <h2>Objects found / categorized in <code>Tileviewer</code> from the Dragonfly Ultrawide Survey</h2>
-  <h5>Last updated: 2024-02-22 04:12:08 UTC</h5>
+  <h5>Last updated: 2024-02-22 14:24:52 UTC</h5>
 </div>
 <div id="cell-e1278d56" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-4">
@@ -362,7 +362,7 @@ display(await(
 <div id="cell-bcd6714a" class="observablehq observablehq--block"></div>
 <div class="card">
 <h1>On Sky Locations</h1>
-<span id="cell-2c9d7d21" class="observablehq--loading"></span>
+<span id="cell-e8a98eae" class="observablehq--loading"></span>
 </div>
 <div class="card">
 <h1>Leaderboard</h1>
@@ -371,6 +371,6 @@ display(await(
 </div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-21T23:12:01">Feb 21, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-22T09:24:45">Feb 22, 2024</a>.</div>
 </footer>
 </div>
