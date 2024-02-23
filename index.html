@@ -54,9 +54,13 @@
 
 import {define} from "./_observablehq/client.js";
 
-define({id: "e1278d56", inputs: ["d3","FileAttachment"], outputs: ["events","parseTime","tagsToCount","tagCounts","updateTagCounts"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"}], body: (d3,FileAttachment) => {
+define({id: "7741f2dc", inputs: ["FileAttachment","d3"], outputs: ["tiles_searched","events","parseTime","pt2","tagsToCount","tagCounts","perc","updateTagCounts"], files: [{"name":"./people_tiles.json","mimeType":"application/json","path":"./_file/people_tiles.json"},{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./completion.json","mimeType":"application/json","path":"./_file/completion.json"}], body: (FileAttachment,d3) => {
+let tiles_searched;
+tiles_searched = FileAttachment("people_tiles.json").json();
+
 let events;
-const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
+const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%L%Z");
+const pt2 = d3.utcParse("%Y-%m-%dT%H:%M:%SZ");
 const tagsToCount = ["LSB-LARGE", "LSB-SMALL", "HALO-FEATURES", "MERGER"];
 const tagCounts = {};
 tagsToCount.forEach(tag => tagCounts[tag] = 0);
@@ -82,6 +86,15 @@ events = FileAttachment("objects.json")
     return data;
   })
 
+let perc; 
+perc = FileAttachment("completion.json").json().then((data) => {
+    data.forEach((d) => {
+      d.time = pt2(d.time);
+    });
+    return data;
+  });
+
+
 
 function updateTagCounts() {
   // Update the DOM with the tag counts
@@ -95,7 +108,7 @@ function updateTagCounts() {
   haloCount.textContent = tagCounts["HALO-FEATURES"];
   mergerCount.textContent = tagCounts["MERGER"];
 }
-return {events,parseTime,tagsToCount,tagCounts,updateTagCounts};
+return {tiles_searched,events,parseTime,pt2,tagsToCount,tagCounts,perc,updateTagCounts};
 }});
 
 define({id: "516d29ff", inline: true, inputs: ["resize","Plot","events","display"], body: async (resize,Plot,events,display) => {
@@ -108,6 +121,23 @@ display(await(
       marks: [
         Plot.ruleY([0]),
         Plot.lineY(events, {x: "time", y: "n", tip: true})
+      ]
+    }))
+  
+))
+}});
+
+define({id: "c9516bc9", inline: true, inputs: ["resize","Plot","perc","display"], body: async (resize,Plot,perc,display) => {
+display(await(
+    resize((width) => Plot.plot({
+      title: "Number of Tiles Searched",
+      subtitle: "All Objects",
+      width,
+      y: {grid: true, label: "Percentage of Spring Tiles", domain: [0, 100]},
+      marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(perc, {x: "time", y: "percentage", tip: true}),
+        Plot.ruleX([new Date("2024-03-14T00:00:00Z")], {stroke: "red",strokeWidth: 6}),
       ]
     }))
   
@@ -172,7 +202,7 @@ gallery
 ))
 }});
 
-define({id: "bcd6714a", inputs: ["d3","events","FileAttachment"], outputs: ["geoMollweide","positiveLongitudes","negativeLongitudes","udgEvents","udgEvents2","regularEvents","mw","groupedData","personCounts","events2"], files: [{"name":"./mw.json","mimeType":"application/json","path":"./_file/mw.json"}], body: async (d3,events,FileAttachment) => {
+define({id: "e57ec981", inputs: ["d3","events","FileAttachment"], outputs: ["geoMollweide","positiveLongitudes","negativeLongitudes","udgEvents","udgEvents2","regularEvents","mw","groupedData","personCounts","events2","data","colorScale"], files: [{"name":"./mw.json","mimeType":"application/json","path":"./_file/mw.json"}], body: async (d3,events,FileAttachment) => {
 const {geoMollweide} = await import("https://cdn.skypack.dev/d3-geo-projection@4");
 const positiveLongitudes = d3.range(180, 19, -20); // From +180 to +20, decreasing leftward
 const negativeLongitudes = d3.range(0, -181, -20).map(value => 360 + value); 
@@ -192,10 +222,12 @@ personCounts.sort((a, b) => b.count - a.count);
 
 // Prepare data for plotting
 const events2 = personCounts.map(d => ({person: d.person, number: d.count}));
-return {geoMollweide,positiveLongitudes,negativeLongitudes,udgEvents,udgEvents2,regularEvents,mw,groupedData,personCounts,events2};
+const data = Array.from({ length: 10 }, (_, i) => ({ label: `Bar ${i}`, value: i }));
+const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+return {geoMollweide,positiveLongitudes,negativeLongitudes,udgEvents,udgEvents2,regularEvents,mw,groupedData,personCounts,events2,data,colorScale};
 }});
 
-define({id: "e8a98eae", inline: true, inputs: ["Plot","geoMollweide","regularEvents","udgEvents2","udgEvents","mw","d3","display"], body: async (Plot,geoMollweide,regularEvents,udgEvents2,udgEvents,mw,d3,display) => {
+define({id: "7cf0d32c", inline: true, inputs: ["Plot","geoMollweide","regularEvents","udgEvents2","udgEvents","mw","d3","display"], body: async (Plot,geoMollweide,regularEvents,udgEvents2,udgEvents,mw,d3,display) => {
 display(await(
 Plot.plot({
   width:1600,
@@ -205,9 +237,9 @@ projection: {
  marks: [
     Plot.graticule(),
     Plot.sphere(),
-    Plot.dot(regularEvents, { x: 'ra', y: 'dec', r: 5, stroke: "gray" ,tip:true}), // Plot regular events with blue border color
-    Plot.dot(udgEvents2, { x: 'ra', y: 'dec', r: 7, stroke: "orange", symbol: "triangle" ,tip:true}), 
-    Plot.dot(udgEvents, { x: 'ra', y: 'dec', r: 10, stroke: "red", symbol: "square" ,tip:true}), 
+    Plot.dot(regularEvents, { x: 'ra', y: 'dec', r: 3, stroke: "gray" ,opacity:0.5,tip:true}), // Plot regular events with blue border color
+    Plot.dot(udgEvents2, { x: 'ra', y: 'dec', r: 7, stroke: "orange", symbol: "square" ,tip:true}), 
+    Plot.dot(udgEvents, { x: 'ra', y: 'dec', r: 10, stroke: "black", symbol: "square", fill:"red",opacity:0.5,tip:true}), 
     Plot.dot(await mw, { x: 'ra', y: 'dec', r: 1, stroke: "steelblue", symbol: "square"}), 
     Plot.text(d3.range(-80, 90, 20), {
        style: { fontSize: '40px' },
@@ -237,7 +269,7 @@ projection: {
 ))
 }});
 
-define({id: "91b4a9ca", inline: true, inputs: ["resize","Plot","events2","display"], body: async (resize,Plot,events2,display) => {
+define({id: "9e50a659", inline: true, inputs: ["resize","Plot","events2","display"], body: async (resize,Plot,events2,display) => {
 display(await(
   resize((width) => Plot.plot({
   x: {
@@ -246,7 +278,23 @@ display(await(
   },
   marks: [
     Plot.ruleX([0]),
-    Plot.barX(events2, {x: "number", y: "person", sort: {y: "x", reverse: true},tip:true})
+    Plot.barX(events2, {x: "number", y: "person", sort: {y: "x", reverse: true},tip:true}),
+  ],
+  marginLeft: 100, // Increase or decrease as needed
+}))
+))
+}});
+
+define({id: "94ba9578", inline: true, inputs: ["resize","Plot","tiles_searched","display"], body: async (resize,Plot,tiles_searched,display) => {
+display(await(
+  resize((width) => Plot.plot({
+  x: {
+    axis: "top",
+    grid: true,
+  },
+  marks: [
+    Plot.ruleX([0]),
+    Plot.barX(tiles_searched, {x: "Ntiles", y: "person", sort: {y: "x", reverse: true},tip:true})
   ],
   marginLeft: 100, // Increase or decrease as needed
 }))
@@ -332,9 +380,9 @@ display(await(
 <div class="hero">
   <h1>Ultrawide Dashboard</h1>
   <h2>Objects found / categorized in <code>Tileviewer</code> from the Dragonfly Ultrawide Survey</h2>
-  <h5>Last updated: 2024-02-23 14:40:31 UTC</h5>
+  <h5>Last updated:  UTC</h5>
 </div>
-<div id="cell-e1278d56" class="observablehq observablehq--block"></div>
+<div id="cell-7741f2dc" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-4">
   <div class="card">
     <h2>Priority UDG Candidates</h2>
@@ -353,24 +401,30 @@ display(await(
     <span class="big" id="mergerCount">0</span>
   </div>
 </div>
-  <div class="card"><span id="cell-516d29ff" class="observablehq--loading"></span></div>
-<div id="cell-8faf347b" class="observablehq observablehq--block"></div>
+<span>  <div class="card"><span id="cell-516d29ff" class="observablehq--loading"></span></div>
+  <div class="card"><span id="cell-c9516bc9" class="observablehq--loading"></span></div>
+</span><div id="cell-8faf347b" class="observablehq observablehq--block"></div>
 <div class="card">
 <h1>Latest UW Objects</h1>
 <span id="cell-ce387d5e" class="observablehq--loading"></span>
 </div>
-<div id="cell-bcd6714a" class="observablehq observablehq--block"></div>
+<div id="cell-e57ec981" class="observablehq observablehq--block"></div>
 <div class="card">
 <h1>On Sky Locations</h1>
-<span id="cell-e8a98eae" class="observablehq--loading"></span>
+<span id="cell-7cf0d32c" class="observablehq--loading"></span>
+</div>
+<span><h1>Leaderboards 😉</h1>
+<div class="grid grid-cols-2">
+<div class="card">
+<h2>Objects Added</h2>
+<span id="cell-9e50a659" class="observablehq--loading"></span>
 </div>
 <div class="card">
-<h1>Leaderboard</h1>
-<h2>Objects Added</h2>
-<span id="cell-91b4a9ca" class="observablehq--loading"></span>
+<h2>Tiles Checked</h2>
+<span id="cell-94ba9578" class="observablehq--loading"></span>
 </div>
-</main>
+</div></span></main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-23T09:40:24">Feb 23, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-02-23T12:18:35">Feb 23, 2024</a>.</div>
 </footer>
 </div>
