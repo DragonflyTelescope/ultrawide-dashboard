@@ -18,7 +18,7 @@
 
 import {define} from "./_observablehq/client.js";
 
-define({id: "7ec6adc1", inputs: ["FileAttachment","html"], outputs: ["Inputs","objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
+define({id: "629e898e", inputs: ["FileAttachment","html"], outputs: ["Inputs","objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
 const Inputs = await import("./_observablehq/stdlib/inputs.js");
 
 // Load objects data from the JSON file
@@ -54,7 +54,7 @@ for (const filename of filenames) {
     imagesData[filename] = {
       image: image,
       tags: tags,
-      link:object.url
+      link:object.at_link
     };
   }
 }
@@ -132,12 +132,12 @@ gallery
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
 <h1 id="spirals-of-interest" tabindex="-1"><a class="observablehq-header-anchor" href="#spirals-of-interest">Spirals of Interest</a></h1>
-<div id="cell-7ec6adc1" class="observablehq observablehq--block"></div>
+<div id="cell-629e898e" class="observablehq observablehq--block"></div>
 <div class="card">
 <span id="cell-ce387d5e" class="observablehq--loading"></span>
 </div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-07T15:12:06">Mar 7, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-10T18:50:57">Mar 10, 2024</a>.</div>
 </footer>
 </div>
