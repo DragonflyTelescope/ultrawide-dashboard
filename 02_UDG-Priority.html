@@ -15,7 +15,7 @@
 
 import {define} from "./_observablehq/client.js";
 
-define({id: "f94291d7", inputs: ["FileAttachment","html"], outputs: ["objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
+define({id: "73247a3f", inputs: ["FileAttachment","html"], outputs: ["objects","muybridge","filenames","imagesData","allTags","filteredFilenames","Gallery","filteredImages","gallery"], files: [{"name":"./objects.json","mimeType":"application/json","path":"./_file/objects.json"},{"name":"./data/Archive.zip","mimeType":"application/zip","path":"./_file/data/Archive.zip"}], body: async (FileAttachment,html) => {
 // Load objects data from the JSON file
 const objects = await FileAttachment("objects.json").json();
 
@@ -49,7 +49,7 @@ for (const filename of filenames) {
     imagesData[filename] = {
       image: image,
       tags: tags,
-      link: object.at_link
+      link: object.url
     };
   }
 }
@@ -141,12 +141,12 @@ gallery
   height: 100%;
 }
 </script>
-<div id="cell-f94291d7" class="observablehq observablehq--block"></div>
+<div id="cell-73247a3f" class="observablehq observablehq--block"></div>
 <div class="card">
 <span id="cell-ce387d5e" class="observablehq--loading"></span>
 </div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-10T18:50:57">Mar 10, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-11T08:06:20">Mar 11, 2024</a>.</div>
 </footer>
 </div>
