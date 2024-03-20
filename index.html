@@ -127,7 +127,7 @@ display(await(
 ))
 }});
 
-define({id: "c9516bc9", inline: true, inputs: ["resize","Plot","perc","display"], body: async (resize,Plot,perc,display) => {
+define({id: "32567482", inline: true, inputs: ["resize","Plot","perc","display"], body: async (resize,Plot,perc,display) => {
 display(await(
     resize((width) => Plot.plot({
       title: "Number of Tiles Searched",
@@ -138,6 +138,7 @@ display(await(
         Plot.ruleY([0]),
         Plot.lineY(perc, {x: "time", y: "percentage", tip: true}),
         Plot.ruleX([new Date("2024-03-14T00:00:00Z")], {stroke: "red",strokeWidth: 6}),
+        Plot.ruleX([new Date("2024-04-08T00:00:00Z")], {stroke: "red",strokeWidth: 6}),
       ]
     }))
   
@@ -380,7 +381,7 @@ display(await(
 <div class="hero">
   <h1>Ultrawide Dashboard</h1>
   <h2>Objects found / categorized in <code>Tileviewer</code> from the Dragonfly Ultrawide Survey</h2>
-  <h5>Last updated: 2024-03-20 16:14:15 UTC</h5>
+  <h5>Last updated: 2024-03-20 16:49:01 UTC</h5>
 </div>
 <div id="cell-7741f2dc" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-4">
@@ -402,7 +403,7 @@ display(await(
   </div>
 </div>
 <span>  <div class="card"><span id="cell-516d29ff" class="observablehq--loading"></span></div>
-  <div class="card"><span id="cell-c9516bc9" class="observablehq--loading"></span></div>
+  <div class="card"><span id="cell-32567482" class="observablehq--loading"></span></div>
 </span><div id="cell-8faf347b" class="observablehq observablehq--block"></div>
 <div class="card">
 <h1>Latest UW Objects</h1>
@@ -425,6 +426,6 @@ display(await(
 </div>
 </div></span></main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-20T12:13:54">Mar 20, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-20T12:48:34">Mar 20, 2024</a>.</div>
 </footer>
 </div>
